@@ -1,5 +1,5 @@
 import cream
-from cream.contrib.appindicator.watcher import StatusNotifierWatcher
+from cream.contrib.appindicators.watcher import StatusNotifierWatcher
 
 class WatcherModule(cream.Module, StatusNotifierWatcher):
     def __init__(self):

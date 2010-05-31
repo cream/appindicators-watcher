@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
-<manifest namespace="org.kde" version="0.0.5">
-    <component name="Status Notifier Watcher" id=".StatusNotifierWatcher" version="0.1" type=".Module" entry="./watcher.py">
+<manifest namespace="org.cream" version="0.0.5">
+    <component name="Status Notifier Watcher" id="org.kde.StatusNotifierWatcher" version="0.1" type=".Module" entry="./watcher.py">
         <license title="GPL" version="3+" />
 
         <author name="Friedrich Weber" mail="fred@reichbier.de" type="developer" />
