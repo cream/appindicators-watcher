@@ -1,0 +1,8 @@
+Test me!
+========
+
+You'll need:
+* indicator-application from bzr (http://launchpad.net/indicator-application)
+* dbusmenu from bzr (http://launchpad.net/dbusmenu)
+
+Run `make` then.
