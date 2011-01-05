@@ -43,11 +43,18 @@ class ItemProxy(dbus.Interface, gobject.GObject):
         self.id = self._id
 
     def on_new_icon(self):
-        self.cached_icon_filename = cached_property(self.get_icon_filename)
+
+        try:
+            del self.cached_icon_filename
+        except AttributeError:
+            pass
         self.emit('icon-new')
 
     def on_new_attention_icon(self):
-        self.cached_attention_icon_filename = cached_property(self.get_attention_icon_filename)
+        try:
+            del self.cached_attention_icon_filename
+        except AttributeError:
+            pass
         self.emit('attention-icon-new')
 
     def on_new_status(self, status):
@@ -62,7 +69,7 @@ class ItemProxy(dbus.Interface, gobject.GObject):
     def do_icon_new(self):
         pass
 
-    def do_new_attention_icon(self):
+    def do_attention_icon_new(self):
         pass
 
     def get_property(self, name):
