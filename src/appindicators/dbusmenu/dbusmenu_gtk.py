@@ -10,7 +10,9 @@ class DBusMenuGTK(object):
     def create_gtk_menu(self, menus):
         widget = gtk.Menu()
         for menu in menus:
-            widget.append(self.create_gtk_menuitem(menu))
+            foo = self.create_gtk_menuitem(menu)
+            foo.show()
+            widget.append(foo)
         return widget
 
     def create_gtk_menuitem(self, menu):
@@ -26,9 +28,10 @@ class DBusMenuGTK(object):
         else:
             cls = gtk.SeparatorMenuItem
         widget = cls()
-        widget.set_label(menu.get_cached_property('label'))
+        widget.set_use_underline(True)
+        if not cls == gtk.SeparatorMenuItem:
+            widget.set_label(menu.get_cached_property('label'))
         widget.set_sensitive(menu.get_cached_property('enabled'))
-        widget.set_visible(menu.get_cached_property('visible'))
         # get the image
         if cls == gtk.ImageMenuItem:
             if menu.get_cached_property('icon-name'):
@@ -44,12 +47,15 @@ class DBusMenuGTK(object):
                 pixbuf = gtk.gdk.pixbuf_new_from_inline(len(icon_data), icon_data, False)
                 widget.set_image(gtk.image_new_from_pixbuf(pixbuf))
         if menu.get_cached_property('toggle-state') == 1:
-            widget.toggle()
+            widget.set_active(True)
         if (menu.children and menu.get_cached_property('children-display')):
             # Yay children.
             widget.set_submenu(self.create_gtk_menu(menu.children))
         # Well I wanna get clicks and motions.
-        widget.connect('activate', self.sig_activate, menu)
+        if cls in (gtk.CheckMenuItem, gtk.RadioMenuItem):
+            widget.connect('toggled', self.sig_toggle, menu)
+        else:
+            widget.connect('activate', self.sig_activate, menu)
         widget.connect('enter-notify-event', self.sig_enter_notify, menu)
         # And changes to the menu structure.
         menu.connect('property-changed', self.sig_property_changed, widget)
@@ -67,6 +73,12 @@ class DBusMenuGTK(object):
 
     def sig_children_changed(self, menu, widget):
         self.initialize()
+
+    def sig_toggle(self, widget, menu):
+        """
+            Called when a menu item gets activated. trigger event.
+        """
+        menu.event('clicked')
 
     def sig_activate(self, widget, menu):
         """
